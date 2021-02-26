@@ -1,0 +1,38 @@
+# Plugin name
+name: fuel-vmax-v9
+# Human-readable name for your plugin
+title: DellEMC Symmetrix plugin for Cinder
+# Plugin version
+version: '1.0.0'
+# Description
+description: Enable DellEMC VMAX as the block storage backend
+# Required fuel version
+fuel_version: ['9.0', '10.0']
+# Specify license of your plugin
+licenses: ['Apache License Version 2.0']
+# Specify author or company name
+authors: ['Michael McAleer <Michael.McAleer@emc.com>, Xiaoyan Wei <Xiaoyan.Wei@emc.com>, EMC']
+# A link to the plugin's page
+homepage: 'https://github.com/emc-openstack/vmax-cinder-driver'
+# Specify a group which your plugin implements, possible options:
+# network, storage, storage::cinder, storage::glance, hypervisor
+groups: ['storage::cinder']
+# Change `false` to `true` if the plugin can be installed in the environment
+# after the deployment.
+is_hotpluggable: false
+
+# The plugin is compatible with releases in the list
+releases:
+  - os: ubuntu
+    version: mitaka-9.0
+    mode: ['ha']
+    deployment_scripts_path: deployment_scripts/
+    repository_path: repositories/ubuntu
+  - os: ubuntu
+    version: newton-10.0
+    mode: ['ha']
+    deployment_scripts_path: deployment_scripts/
+    repository_path: repositories/ubuntu
+
+# Version of plugin package
+package_version: '5.0.0'

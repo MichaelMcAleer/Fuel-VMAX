@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Set or unset values of shell options and positional parameters.
+# -e = Exit immediately if a command exits with a non-zero status.
+# -u = Treat unset variables as an error when substituting.
+# -x = Print commands and their arguments as they are executed.
+set -eux
+
+# Download required puppet labs forget modules stdlib & inifile
+# puppet module install puppetlabs-stdlib
+# puppet module install puppetlabs-inifile
+
+# Set root path & repo directories
+ROOT="$(dirname `readlink -f $0`)"
+MODULES="${ROOT}"/deployment_scripts/puppet/modules
+
+REPO_PATH='https://github.com/stackforge/fuel-library/tarball/f43d885914d74fbd062096763222f350f47480e1'
+RPM_REPO="${ROOT}"/repositories/centos/
+DEB_REPO="${ROOT}"/repositories/ubuntu/
+
+# Make repo directories
+mkdir -p "${RPM_REPO}"
+mkdir -p "${DEB_REPO}"
+mkdir -p "${MODULES}"
+
+# Download the required stdlib & inifile modules
+wget -qO- "${REPO_PATH}" | tar -C "${MODULES}" --strip-components=3 -zxvf - \
+    stackforge-fuel-library-f43d885/deployment/puppet/{inifile,stdlib}
+
+# Downloads needed RPM or DEB packages
+function download {
+    case "$1" in
+        deb) REPO="${DEB_REPO}";;
+        rpm) REPO="${RPM_REPO}";;
+    esac
+    shift
+
+    while [ $# -gt 0 ]; do
+        FILE=$(basename "$1")
+        wget -qO - $1 > "$REPO/$FILE"
+        shift
+    done
+}
+
+# ***IMPORTANT***
+# Check package versions are correct
+
+download deb http://mirrors.kernel.org/ubuntu/pool/universe/p/pywbem/python-pywbem_0.8.0~dev650-1_all.deb \
+             http://mirrors.kernel.org/ubuntu/pool/main/o/open-iscsi/open-iscsi_2.0.873+git0.3b4b4500-14ubuntu3_amd64.deb
+
+download rpm http://mirror.centos.org/centos/6/os/x86_64/Packages/pywbem-0.7.0-4.el6.noarch.rpm \
+             http://mirror.centos.org/centos/6/os/x86_64/Packages/iscsi-initiator-utils-6.2.0.873-21.el6.x86_64.rpm

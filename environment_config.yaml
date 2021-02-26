@@ -1,0 +1,280 @@
+attributes:
+  metadata:
+    # Settings group can be one of "general", "security", "compute", "network",
+    # "storage", "logging", "openstack_services" and "other".
+    group: 'storage'
+
+  vmax_hardware_version:
+    type: 'radio'
+    weight: 2
+    value: 'vmax_v3_afa'
+    label: "Symmetrix version"
+    description: "Please select your VMAX version"
+    values:
+      - data: 'vmax_v3_afa'
+        label: "VMAX v3 All-Flash"
+      - data: 'vmax_v3_hybrid'
+        label: "VMAX v3 Hybrid"
+      - data: 'vmax_v2'
+        label: "VMAX v2"
+
+
+  vmax_backened_type_iscsi:
+    type: "checkbox"
+    weight: 3
+    value: false
+    label: "iSCSI backend"
+    description: "Please select this box if you use an iSCSI backend"
+
+
+  vmax_iscsi_ip_address:
+    type: 'text'
+    value: ""
+    label: "iSCSI target IP address"
+    description: "Type iSCSI target IP address"
+    weight: 4
+    regex:
+      source: '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'
+      error: "You must provide a valid IP address"
+    restrictions:
+      - condition: settings:fuel-vmax-v9.vmax_backened_type_iscsi.value==false
+        action: hide
+
+
+  vmax_iscsi_volume_type:
+    type: 'text'
+    value: ""
+    label: "iSCSI Volume type"
+    description: "Type iSCSI volume type"
+    weight: 5
+    regex:
+      source: '^([\S]+)$'
+      error: "You must provide a valid iSCSI volume type (no spaces)"
+    restrictions:
+      - condition: settings:fuel-vmax-v9.vmax_backened_type_iscsi.value==false
+        action: hide
+
+
+  vmax_issi_backend_name:
+    type: 'text'
+    value: ""
+    label: "iSCSI backend name"
+    description: "Type iSCSI backend name"
+    weight: 6
+    regex:
+      source: '^([\S]+)$'
+      error: "You must provide a valid backend name (no spaces)"
+    restrictions:
+      - condition: settings:fuel-vmax-v9.vmax_backened_type_iscsi.value==false
+        action: hide
+
+
+  vmax_backened_type_fc:
+    type: "checkbox"
+    weight: 7
+    value: false
+    label: "Fibre Channel backend"
+    description: "Please select this box if you use a Fibre Channel backend"
+
+
+  vmax_fc_volume_type:
+    type: 'text'
+    value: ""
+    label: "Fibre Channel volume type"
+    description: "Type FC volume type"
+    weight: 8
+    regex:
+      source: '^([\S]+)$'
+      error: "You must provide a valid FC volume type (no spaces)"
+    restrictions:
+      - condition: settings:fuel-vmax-v9.vmax_backened_type_fc.value==false
+        action: hide
+
+
+  vmax_fc_backend_name:
+    type: 'text'
+    value: ""
+    label: "Fibre Channel backend name"
+    description: "Type FC backend name"
+    weight: 9
+    regex:
+      source: '^([\S]+)$'
+      error: "You must provide a valid FC backend name (no spaces)"
+    restrictions:
+      - condition: settings:fuel-vmax-v9.vmax_backened_type_fc.value==false
+        action: hide
+
+
+  vmax_ecom_host_address:
+    type: "text"
+    value: ""
+    label: "ECOM host address"
+    description: "Type host address of your ECOM server"
+    weight: 10
+    regex:
+      source: '^([\S]+)$'
+      error: "ECOM host address cannot be empty"
+    restrictions:
+      - condition: settings:fuel-vmax-v9.vmax_hardware_version.value=='vmax_v3_afa'
+        action: hide
+      - condition: settings:fuel-vmax-v9.vmax_hardware_version.value=='vmax_v3_hybrid'
+        action: hide
+
+
+  vmax_ecom_ip_address:
+    type: 'text'
+    value: ""
+    label: "ECOM IP address"
+    description: "Type IP address for ECOM server"
+    weight: 11
+    regex:
+      source: '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'
+      error: "You must provide a valid IP address"
+    restrictions:
+      - condition: settings:fuel-vmax-v9.vmax_hardware_version.value=='vmax_v2'
+        action: hide
+
+
+  vmax_ecom_port:
+    type: 'text'
+    value: ""
+    label: "ECOM Server port"
+    description: "Type port number for your ECOM Server"
+    weight: 12
+    regex:
+      source: '^([\S][0-9]+)$'
+      error: "You must provide a valid port group number"
+
+
+  vmax_ecom_username:
+    type: 'text'
+    value: ""
+    label: "ECOM Server username"
+    description: "Type username for ECOM server"
+    weight: 13
+    regex:
+      source: '^[\S]{3,}$'
+      error: "You must provide a username with at least 3 characters"
+
+
+  vmax_ecom_password:
+    type: 'password'
+    value: ""
+    label: "ECOM Server password"
+    description: "Type password for ECOM server"
+    weight: 14
+    regex:
+      source: '^[\S]{3,}$'
+      error: "You must provide a password with at least 3 characters"
+
+
+  vmax_array_id:
+    type: 'text'
+    value: ""
+    label: "Symmetrix ID"
+    description: "Type Symmetrix ID"
+    weight: 15
+    regex:
+      source: '^([\S]+)$'
+      error: "Symmetrix ID cannot be empty"
+
+
+  vmax_port_group:
+    type: 'text'
+    value: ""
+    label: "Symmetrix Port Group(s)"
+    description: "Type Symmetrix Port Group name(s), seperate with a comma if more than one port group required"
+    weight: 16
+    regex:
+      source: '^[\S]([^,]*,){0,15}[^,]*$'
+      error: "For more than one port group, seperate with a comma"
+
+
+  vmax_v2_pool:
+    type: 'text'
+    value: ""
+    label: "Symmetrix Pool"
+    description: "Type Symmetrix Pool name"
+    weight: 17
+    regex:
+      source: '^([\S]+)$'
+      error: "Symmetrix Pool name cannot be empty"
+    restrictions:
+      - condition: settings:fuel-vmax-v9.vmax_hardware_version.value=='vmax_v3'
+        action: hide
+
+
+  vmax_v3_srp:
+    type: 'text'
+    value: ""
+    label: "Symmetrix SRP"
+    description: "Type Symmetrix Storage Resource Pool name"
+    weight: 18
+    regex:
+      source: '^([\S]+)$'
+      error: "Symmetrix Storage Resource Pool name cannot be empty"
+    restrictions:
+      - condition: settings:fuel-vmax-v9.vmax_hardware_version.value=='vmax_v2'
+        action: hide
+
+
+  vmax_v2_fast_policy:
+    type: 'text'
+    value: ""
+    label: "Symmetrix FAST policy"
+    description: "Type name of the FAST policy your would like to implement"
+    weight: 19
+    regex:
+      source: '^([\S]+)$'
+      error: "Symmetrix FAST name cannot be empty"
+    restrictions:
+      - condition: settings:fuel-vmax-v9.vmax_hardware_version.value == 'vmax_v3'
+        action: hide
+
+
+  vmax_v3_slo:
+    type: 'radio'
+    weight: 20
+    value: "diamond"
+    label: "Symmetrix SLO"
+    description: "Please select the Symmetrix SLO you would like to implement"
+    values:
+      - data: 'diamond'
+        label: "Diamond"
+      - data: 'platinum'
+        label: "Platinum"
+      - data: 'gold'
+        label: "Gold"
+      - data: 'silver'
+        label: "Silver"
+      - data: 'bronze'
+        label: "Bronze"
+      - data: 'optimized'
+        label: "Optimized"
+    restrictions:
+      - condition: settings:fuel-vmax-v9.vmax_hardware_version.value == 'vmax_v2'
+        action: hide
+      - condition: settings:fuel-vmax-v9.vmax_hardware_version.value == 'vmax_v3_afa'
+        action: hide
+
+
+  vmax_v3_workload:
+    type: 'radio'
+    weight: 21
+    value: "oltp"
+    label: "Symmetrix Workload type"
+    description: "Please select the Workload type you would like to implement"
+    values:
+      - data: 'oltp'
+        label: "OLTP"
+      - data: 'oltp_rep'
+        label: "OLTP + Replication"
+      - data: 'dss'
+        label: "DSS"
+      - data: 'dss_rep'
+        label: "DSS + Replication"
+      - data: 'none'
+        label: "None"
+    restrictions:
+      - condition: settings:fuel-vmax-v9.vmax_hardware_version.value == 'vmax_v2'
+        action: hide
